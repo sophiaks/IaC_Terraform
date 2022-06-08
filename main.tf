@@ -50,20 +50,14 @@ module "eks" {
       resolve_conflicts = "OVERWRITE"
     }
   }
+  #for_each      = module.vpc.private_subnets.ids
 
-  cluster_encryption_config = [{
-    provider_key_arn = "ac01234b-00d9-40f6-ac95-e42345f78b00"
-    resources        = ["secrets"]
-  }]
-
-  ################ AAAAAAAAAAAAAAAAA
-  ##################AAAAAAAAAAAA
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = ["id1", "id2"]
+  subnet_ids = module.vpc.private_subnets[*]
 
   # Self Managed Node Group(s)
   self_managed_node_group_defaults = {
-    instance_type                          = "m2.micro"
+    instance_type                          = "t3.small"
     update_launch_template_default_version = true
     iam_role_additional_policies = [
       "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
@@ -73,8 +67,8 @@ module "eks" {
   self_managed_node_groups = {
     one = {
       name         = "mixed-1"
-      max_size     = 3
-      desired_size = 2
+      max_size     = 5
+      desired_size = 3
 
       use_mixed_instances_policy = true
       mixed_instances_policy = {
@@ -83,37 +77,21 @@ module "eks" {
           on_demand_percentage_above_base_capacity = 10
           spot_allocation_strategy                 = "capacity-optimized"
         }
-
-        override = [
-          {
-            instance_type     = "m2.micro"
-            weighted_capacity = "1"
-          },
-          {
-            instance_type     = "m2.micro"
-            weighted_capacity = "2"
-          },
-        ]
       }
     }
   }
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
-    disk_size      = 50
-    instance_types = ["m2.micro"]
+    instance_types = ["t3.small"]
   }
 
   eks_managed_node_groups = {
-    blue = {}
-    green = {
-      min_size     = 1
-      max_size     = 10
+      min_size     = 3
+      max_size     = 5
       desired_size = 1
 
-      instance_types = ["m2.micro"]
-      capacity_type  = "SPOT"
-    }
+      instance_types = ["t3.small", "t2.small", "t2.micro"]
   }
 
   # Fargate Profile(s)
@@ -170,7 +148,7 @@ module "vote_service_sg" {
 
   name        = "user-service"
   description = "Security group for user-service with custom ports open within VPC, and PostgreSQL publicly open"
-  vpc_id      = "vpc-123"
+  vpc_id      = module.vpc.vpc_id
 
   ingress_cidr_blocks      = ["10.10.0.0/16"]
   ingress_rules            = ["https-443-tcp"]
@@ -223,11 +201,11 @@ module "ec2_instance" {
   name = "instance-${each.key}"
 
   ami                    = "${var.ami_ubuntu}"
-  instance_type          = "t2.micro"
+  instance_type          = "t3.small"
   key_name               = "user1"
   monitoring             = true
-  vpc_security_group_ids = ["sg-12345678"]
-  subnet_id              = "subnet-eddcdzz4"
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  subnet_id              = module.vpc.public_subnets[0]
 
   tags = {
     Terraform   = "true"
