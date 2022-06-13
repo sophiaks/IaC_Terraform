@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sopas-pod
+  labels:
+    app: sopa
+spec:
+  containers:
+    - name: sopas-container
+      image: sopa/megadados_aps1

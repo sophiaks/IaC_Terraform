@@ -23,5 +23,5 @@ variable "public_subnets" {
 
 variable "ami_ubuntu" {
     description = "Ubuntu 20.04 Image"
-    default = ""
+    default = "ami-09cce346b3952cce3"
 }

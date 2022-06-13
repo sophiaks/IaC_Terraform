@@ -9,6 +9,8 @@ module "vpc" {
   private_subnets = "${var.private_subnets}"
   public_subnets  = "${var.public_subnets}"
 
+  enable_dns_support = true
+  enable_dns_hostnames = true
   enable_nat_gateway = true
   single_nat_gateway  = false
   reuse_nat_ips       = true
@@ -17,8 +19,7 @@ module "vpc" {
   enable_vpn_gateway = true
   
   tags = {
-    Terraform = "true"
-    Environment = "dev"
+    Name = "sopas-vpc"
   }
 }
 
@@ -44,67 +45,35 @@ module "eks" {
   cluster_addons = {
     coredns = {
       resolve_conflicts = "OVERWRITE"
-    }
+    } 
     kube-proxy = {}
     vpc-cni = {
       resolve_conflicts = "OVERWRITE"
     }
   }
-  #for_each      = module.vpc.private_subnets.ids
 
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets[*]
-
-  # Self Managed Node Group(s)
-  self_managed_node_group_defaults = {
-    instance_type                          = "t3.small"
-    update_launch_template_default_version = true
-    iam_role_additional_policies = [
-      "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-    ]
-  }
-
-  self_managed_node_groups = {
-    one = {
-      name         = "mixed-1"
-      max_size     = 5
-      desired_size = 3
-
-      use_mixed_instances_policy = true
-      mixed_instances_policy = {
-        instances_distribution = {
-          on_demand_base_capacity                  = 0
-          on_demand_percentage_above_base_capacity = 10
-          spot_allocation_strategy                 = "capacity-optimized"
-        }
-      }
-    }
-  }
+  subnet_ids = module.vpc.private_subnets
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     instance_types = ["t3.small"]
   }
 
-  eks_managed_node_groups = {
-      min_size     = 3
-      max_size     = 5
-      desired_size = 1
+  
+    eks_managed_node_groups = {
+      sopa = {
+        min_size     = 3
+        max_size     = 5
+        desired_size = 1
 
-      instance_types = ["t3.small", "t2.small", "t2.micro"]
-  }
+        subnet_ids = module.vpc.private_subnets
+        ami_id = "${var.ami_ubuntu}"
 
-  # Fargate Profile(s)
-  fargate_profiles = {
-    default = {
-      name = "default"
-      selectors = [
-        {
-          namespace = "default"
-        }
-      ]
+        instance_types = ["t3.small", "t2.small", "t2.micro"]
+      }
     }
-  }
+  
 
   # aws-auth configmap
   manage_aws_auth_configmap = true
