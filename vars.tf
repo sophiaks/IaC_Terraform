@@ -4,5 +4,10 @@ variable "AWS_REGION" {
 
 variable "cluster-name" {
   default = "eks-cluster"
-  type    = "string"
+  type    = string
+}
+
+variable "ami" {
+  default = "ami-09d56f8956ab235b3"
+  type    = string
 }

@@ -1,5 +1,7 @@
 provider "aws" {
     region = "${var.AWS_REGION}"
+    // LINUX
     // shared_config_files = ["~/.aws/config"]
-    shared_credentials_files = ["~/.aws/credentials"]
+    // WINDOWS
+    shared_credentials_files = ["C:/Users/sophi/.aws/creds"]
 }
