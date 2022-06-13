@@ -39,19 +39,6 @@ module "eks" {
   cluster_name    = "sopas-cluster"
   cluster_version = "1.21"
 
-  cluster_endpoint_private_access = true
-  cluster_endpoint_public_access  = true
-
-  cluster_addons = {
-    coredns = {
-      resolve_conflicts = "OVERWRITE"
-    } 
-    kube-proxy = {}
-    vpc-cni = {
-      resolve_conflicts = "OVERWRITE"
-    }
-  }
-
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
@@ -77,37 +64,6 @@ module "eks" {
 
   # aws-auth configmap
   manage_aws_auth_configmap = true
-
-  aws_auth_roles = [
-    {
-      rolearn  = "arn:aws:iam::66666666666:role/role1"
-      username = "role1"
-      groups   = ["system:masters"]
-    },
-  ]
-
-  aws_auth_users = [
-    {
-      userarn  = "arn:aws:iam::66666666666:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::66666666666:user/user2"
-      username = "user2"
-      groups   = ["system:masters"]
-    },
-  ]
-
-  aws_auth_accounts = [
-    "777777777777",
-    "888888888888",
-  ]
-
-  tags = {
-    Environment = "dev"
-    Terraform   = "true"
-  }
 }
 
 ## SECURITY GROUP ##
@@ -174,7 +130,7 @@ module "ec2_instance" {
   key_name               = "user1"
   monitoring             = true
   vpc_security_group_ids = [module.vpc.default_security_group_id]
-  subnet_id              = module.vpc.public_subnets[0]
+  subnet_id              = "${join(",", module.vpc.private_subnets)}"
 
   tags = {
     Terraform   = "true"

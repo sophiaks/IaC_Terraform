@@ -1,4 +1,5 @@
 provider "aws" {
     region = "${var.AWS_REGION}"
-    shared_credentials_files = ["~/.aws/credentials"]
+    // shared_credentials_files = ["~/.aws/credentials"]
+    shared_credentials_files = ["C:/Users/sophi/.aws/creds"]
 }
