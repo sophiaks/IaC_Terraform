@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: sopa
+  labels:
+    app: sopa
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sopa
+  containers:
+    - name: sopas-container
+      image: sophiaks/megadados_aps1
+      ports:
+        - containerPort: 80

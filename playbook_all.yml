@@ -1,0 +1,14 @@
+---
+- name: Deploy to Kubernetes
+  hosts: all
+  connection: local
+
+  tasks:
+   - name: Deploy app
+     command: kubectl create deployment sopa --image=sophiaks/megadados_aps1
+
+   - name: Autoscale
+     command: kubectl autoscale deployment sopa --min=2 --max=4 --cpu-percent=70
+
+   - name: Expose
+     command: kubectl expose deployment.apps/sopa --type=LoadBalancer --port=80

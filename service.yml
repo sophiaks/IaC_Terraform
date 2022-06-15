@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sopas-service
+  labels:
+    app: sopas-service
+spec:
+  selector: 
+    app: sopa
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80

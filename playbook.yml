@@ -1,0 +1,21 @@
+---
+- name: Deploy to Cluster
+  hosts: localhost
+  connection: local
+  become: true
+  tasks:
+  - name: Deploy Pod
+    become: true
+    become_user: root
+    shell: |
+      kubectl apply -f pod.yml
+  - name: Deploy Service
+    become: true
+    become_user: root
+    shell: | 
+      kubectl apply -f service.yml
+  - name: Autoscale
+    become: true
+    become_user: root
+    shell: |
+      kubectl autoscale deployment sopa
