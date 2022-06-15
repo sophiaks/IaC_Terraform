@@ -5,9 +5,9 @@ metadata:
   labels:
     app: sopas-service
 spec:
-  ports:
-  - port: 80
-    protocol: TCP
-  selector:
-    app: sopas-service
+  selector: 
+    app: sopa
   type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80

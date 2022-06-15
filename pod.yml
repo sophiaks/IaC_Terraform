@@ -1,10 +1,16 @@
 apiVersion: v1
-kind: Pod
+kind: Deployment
 metadata:
-  name: sopas-pod
+  name: sopa
   labels:
     app: sopa
 spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sopa
   containers:
-    - name: sopas-container
+    - name: sopa
       image: sopa/megadados_aps1
+      ports:
+        - containerPort: 80
