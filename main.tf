@@ -12,7 +12,6 @@ module "vpc" {
   enable_dns_support = true
   enable_dns_hostnames = true
   enable_nat_gateway = true
-  single_nat_gateway  = false
   reuse_nat_ips       = true
   external_nat_ip_ids = "${aws_eip.nat.*.id}"
 
@@ -46,13 +45,11 @@ module "eks" {
   eks_managed_node_group_defaults = {
     instance_types = ["t3.small"]
   }
-
-  
     eks_managed_node_groups = {
       sopa = {
         min_size     = 3
-        max_size     = 5
-        desired_size = 1
+        max_size     = 3
+        desired_size = 3
 
         subnet_ids = module.vpc.private_subnets
         ami_id = "${var.ami_ubuntu}"
@@ -96,45 +93,7 @@ module "vote_service_sg" {
 
 module "iam_assumable_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-
-  trusted_role_arns = [
-    "arn:aws:iam::307990089504:root",
-    "arn:aws:iam::835367859851:user/anton",
-  ]
-
   create_role = true
-
-  role_name         = "custom"
-  role_requires_mfa = true
-
-  custom_role_policy_arns = [
-    "arn:aws:iam::aws:policy/AmazonCognitoReadOnly",
-    "arn:aws:iam::aws:policy/AlexaForBusinessFullAccess",
-  ]
   number_of_custom_role_policy_arns = 2
+  role_name         = "iam-role"
 }
-
-
-## EC2 Instance ##
-
-module "ec2_instance" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 3.0"
-
-  for_each = toset(["django1", "django2", "postgresql"])
-
-  name = "instance-${each.key}"
-
-  ami                    = "${var.ami_ubuntu}"
-  instance_type          = "t3.small"
-  key_name               = "user1"
-  monitoring             = true
-  vpc_security_group_ids = [module.vpc.default_security_group_id]
-  subnet_id              = "${join(",", module.vpc.private_subnets)}"
-
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
-}
-
