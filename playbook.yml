@@ -18,4 +18,4 @@
     become: true
     become_user: root
     shell: |
-      kubectl autoscale deployment sopas-container
+      kubectl autoscale deployment sopa

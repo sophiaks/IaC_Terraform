@@ -10,7 +10,7 @@ spec:
     matchLabels:
       app: sopa
   containers:
-    - name: sopa
-      image: sopa/megadados_aps1
+    - name: sopas-container
+      image: sophiaks/megadados_aps1
       ports:
         - containerPort: 80
