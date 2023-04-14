@@ -6,7 +6,7 @@ This is a Terraform Project for infrastructure automation on AWS. The project wa
 ![](https://img.shields.io/badge/-Amazon_EC2-informational?style=flat&logo=AmazonEC2&logoColor=white&color=FF9900)
 ![](https://img.shields.io/badge/-Kubernetes-informational?style=flat&logo=Kubernetes&logoColor=white&color=326CE5)
 ![](https://img.shields.io/badge/-Terraform-informational?style=flat&logo=Terraform&logoColor=white&color=7B42BC)
-
+![](https://img.shields.io/badge/-Ansible-informational?style=flat&logo=Ansible&logoColor=white&color=EE0000)
 
 The infrastructure is composed of:
 - 1 Kubernetes Cluster AWS EKS (Amazon Elastic Kubernetes Service).
