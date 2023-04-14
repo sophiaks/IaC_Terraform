@@ -12,6 +12,8 @@ The infrastructure is composed of:
 - 1 Kubernetes Cluster AWS EKS (Amazon Elastic Kubernetes Service).
 - 3 t2.small instances for the EKS cluster that will be the worker nodes.
 
+![image](https://user-images.githubusercontent.com/49500515/232123477-651a3d62-902f-44a4-9f84-250f7b88f0d9.png)
+
 Deploying:
 ```
 aws eks --region us-east-1 update-kubeconfig --name sopas-eks 
