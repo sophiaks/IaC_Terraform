@@ -2,8 +2,8 @@
 
 This is a Terraform Project for infrastructure automation on AWS. The project was divided into 2 parts: the infrastructure and the application.
 
-![](https://img.shields.io/badge/-AmazonEKS-informational?style=flat&logo=AmazonEKS&logoColor=white&color=FF9900)
-![](https://img.shields.io/badge/-AmazaonEC2-informational?style=flat&logo=aws&logoColor=white&color=FF9900)
+![](https://img.shields.io/badge/-Amazon_EKS-informational?style=flat&logo=AmazonEKS&logoColor=white&color=FF9900)
+![](https://img.shields.io/badge/-Amazaon_EC2-informational?style=flat&logo=aws&logoColor=white&color=FF9900)
 
 
 The infrastructure is composed of:
