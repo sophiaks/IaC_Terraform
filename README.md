@@ -2,7 +2,7 @@
 
 This is a Terraform Project for infrastructure automation on AWS. The project was divided into 2 parts: the infrastructure and the application.
 
-![](https://img.shields.io/badge/-Python-informational?style=flat&logo=terraform&logoColor=white&color=F7D146)
+![](https://img.shields.io/badge/-Python-informational?style=flat&logo=AmazonEKS&logoColor=white&color=FF9900)
 ![](https://img.shields.io/badge/-Python-informational?style=flat&logo=aws&logoColor=white&color=F7D146)
 
 
